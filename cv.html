@@ -454,7 +454,28 @@
   </div>
 
   <div class="no-print">
-    <button onclick="window.print()"><i class="bi bi-printer"></i> Print / Save PDF</button>
+    <button onclick="downloadPDF()" style="background:#1a1a2e; margin-right:10px;"><i class="bi bi-download"></i> Download PDF</button>
+    <button onclick="window.print()"><i class="bi bi-printer"></i> Print</button>
   </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    function downloadPDF() {
+      const btn = event.target.closest('button');
+      btn.textContent = ' Generating...';
+      btn.disabled = true;
+      const el = document.querySelector('.cv-container');
+      html2pdf().set({
+        margin: [10, 10, 10, 10],
+        filename: 'Hendri_Dwi_Nugroho_CV.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, allowTaint: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).from(el).save().then(() => {
+        btn.textContent = ' Download PDF';
+        btn.disabled = false;
+      });
+    }
+  </script>
 </body>
 </html>
