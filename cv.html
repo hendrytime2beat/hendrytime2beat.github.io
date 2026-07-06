@@ -454,13 +454,34 @@
   </div>
 
   <div class="no-print">
-    <button onclick="window.print()"><i class="bi bi-download"></i> Download PDF</button>
+    <button onclick="downloadPDF()"><i class="bi bi-filetype-pdf"></i> Download PDF</button>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.3/html2pdf.bundle.min.js"></script>
   <script>
+    async function downloadPDF() {
+      const btn = document.querySelector('.no-print button');
+      btn.innerHTML = ' Processing...';
+      btn.disabled = true;
+      try {
+        const el = document.querySelector('.cv-container');
+        await html2pdf().set({
+          margin: [5, 5, 5, 5],
+          filename: 'Hendri_Dwi_Nugroho_CV.pdf',
+          image: { type: 'jpeg', quality: 0.95 },
+          html2canvas: { scale: 2, useCORS: true, logging: false },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        }).from(el).save();
+      } catch(e) {
+        alert('Gagal generate PDF. Gunakan Print > Save as PDF.');
+        window.print();
+      }
+      btn.innerHTML = '<i class="bi bi-filetype-pdf"></i> Download PDF';
+      btn.disabled = false;
+    }
     window.onload = function() {
-      if (window.location.search.includes('print')) {
-        setTimeout(function() { window.print(); }, 500);
+      if (window.location.search.includes('dl=')) {
+        setTimeout(downloadPDF, 300);
       }
     };
   </script>
